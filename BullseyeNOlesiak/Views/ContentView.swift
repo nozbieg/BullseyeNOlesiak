@@ -9,11 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var alertIsVisible: Bool = false
+    @State private var alertIsVisible = false
+    @State private var sliderValue = 50.0
+    @State private var game = Game()
     
     var body: some View {
         VStack {
-            Text("Wyceluj jak najbliżej tej wartości")
+            Text("Norbert wyceluj jak najbliżej tej wartości")
                 .bold()
                 .kerning(2.0)
                 .multilineTextAlignment(.center)
@@ -21,14 +23,14 @@ struct ContentView: View {
                 .lineSpacing(4.0)
                 .font(.footnote)
                 
-            Text("89")
+            Text(String(game.target))
                 .kerning(-1.0)
                 .font(.largeTitle)
                 .fontWeight(.black)
             HStack {
                 Text("1")
                     .bold()
-                Slider(value: .constant(50), in: 1.0...100.0)
+                Slider(value: $sliderValue , in: 1.0...100.0)
                 Text("100")
                     .bold()
                     
@@ -40,10 +42,12 @@ struct ContentView: View {
                 Text("Hit me")
             }
             
-            .alert("Hello there", isPresented: $alertIsVisible){
+            .alert("Hello there", isPresented: self.$alertIsVisible){
                 Button("Awsome") {}
             } message: {
-                Text("My first popup")
+                let roundedValue: Int = Int(sliderValue.rounded())
+                Text("The slider value is \(roundedValue).\n" +
+                     "You scored \(game.points(sliderValue: roundedValue)) points this round")
             }
         }
     }
